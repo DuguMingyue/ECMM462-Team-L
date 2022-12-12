@@ -10,9 +10,8 @@ public class block{
 
     public block(){}
 
-    public block(int id, int release, int due, boolean ready){
+    public block(int id, int due, boolean ready){
         this.id = id;
-        this.release = release;
         this.due = due;
         this.ready = ready;
     }
@@ -25,15 +24,17 @@ public class block{
         while(temp < blockamount){
             int idtemp = temp;
             // Assume all block
-            int rlstemp = r.nextInt(blockamount);
-            int duetemp = r.nextInt(blockamount) + blockamount;
+            int duetemp = r.nextInt(blockamount) + 2 * blockamount; //Add a basic time to avoid to short due data
             boolean readytemp = false;
-            block newblock = new block(idtemp, rlstemp, duetemp, readytemp);
+            block newblock = new block(idtemp, duetemp, readytemp);
             result.add(newblock);
             temp++;
         }
         return result;
     }
 
+    public static void handOver(block Block){
+        Block.ready = true;
+    }
 
 }

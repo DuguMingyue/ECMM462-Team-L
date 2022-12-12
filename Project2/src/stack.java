@@ -1,14 +1,14 @@
 import java.util.ArrayList;
-
+// Father class
 public class stack {
     ArrayList<block> stack = new ArrayList<>();
     int capacity = 1;
 }
-
+// Buffer stack
 class bufferStack {
+    int bufferamount = 3;
+    int capacity = 7;
     ArrayList<ArrayList<block>> stack = new ArrayList<>();
-    int bufferamount = 1;
-    int capacity = 1;
 
     public bufferStack(int bufferamount){
         this.bufferamount = bufferamount;
@@ -18,11 +18,11 @@ class bufferStack {
         }
     }
 }
-
+// Arriving stack
 class arriveStack extends stack{
-
+    int capacity = 5;
 }
-
+// Not used in HotStorage
 class handoverStack extends stack{
 
 }
