@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Random;
 // Parameters adjustment is in world.java and property.java
@@ -13,7 +12,7 @@ public class simulation {
         System.out.println("Generate world success, start simulation");
 
         // Run simulation
-        while(sim.blockpool.size() > 0 || sim.nowblock.size() > 0){
+        while(sim.hndstk.stack.size() != sim.blockamount){
             sim.timestamp++;
 
             // If timestamp mod arrive intervals = 0 and the arrive stack is still empty to use, then release new block
@@ -22,7 +21,7 @@ public class simulation {
                 if(sim.aristk.stack.size() < sim.aristk.capacity && sim.blockpool.size() > 0){
                     // Randomly choose a new block to release
                     int index = r.nextInt(sim.blockpool.size());
-                    sim.blockpool.get(index).release = sim.timestamp;
+                    //sim.blockpool.get(index).release = sim.timestamp;
                     sim.aristk.stack.add(sim.blockpool.get(index));
                     sim.nowblock.add(sim.blockpool.get(index));
                     sim.blockpool.remove(index);
@@ -37,12 +36,16 @@ public class simulation {
             sim.schedule = solver.solve(sim);
             if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
                 sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
+                sim.hndstk.stack.add(sim.nowblock.get(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId));
                 sim.nowblock.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
-            }
 
-            // Evaluations
+            }
             System.out.println(sim.timestamp);
+
         }
+
+        // Evaluations
+        System.out.println(sim.timestamp);
     }
 }
 

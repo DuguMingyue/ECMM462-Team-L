@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class crane {
     int id = 1; // In hot storage there is only 1 crane
-    int locationId = -1; // -1 Reperesent the arrive stack, initially the crane is at the position
+    int locationId = 0; // 0 Reperesent the arrive stack, initially the crane is at the position
     int verticalPosition = 1; //1 represent max height, 0 represent ground
     int horizonPosition = 0; // 0 represent arrive stack, 1 represent buffer stack, 2 represent handover stack, the question omit the move time between buffers
     block load = new block();
@@ -32,7 +32,7 @@ public class crane {
 // This is a queue for craneMove, capacity is 100, which means keep 100 moves
 class craneSchedule {
     ArrayList<craneMove> moves = new ArrayList<>();
-    int SeqNr = 0;
+    int index = 0;
 }
 
 class craneMove {
@@ -45,7 +45,9 @@ class craneMove {
     int stepCost = -1;
     int timeCost = -1;
     boolean emptyMove = true;
-    boolean hangUpStart = false; //Is the crane hang up at the start point
+    boolean executed = false; //Is the crane hang up at the start point
+
+    public craneMove(){}
 
     public craneMove(crane crane){
         this.crane = crane;

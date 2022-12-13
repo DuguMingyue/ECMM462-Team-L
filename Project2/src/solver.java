@@ -4,15 +4,24 @@ public class solver {
     public static craneSchedule solve(world world){
         //Decide the block
         Random r = new Random();
-
-        if(world.crane.isWorking == false){
+        //If the crane is not working, then generate new steps and work
+        if(world.currentMove.executed == true){
             world.crane.isWorking = true;
+
             // Return value should be on the top of the stack and emptyMove is true or not
-            int index = r.nextInt(world.nowblock.size());
-            int src = 0;
-            int tgt = 0;
+            int index = r.nextInt(world.nowblock.size());//The block
+            int src = 0;//source id
+            int tgt = 0;//target id
 
             craneMove newMove = new craneMove(world.crane);
+
+            if(world.crane.horizonPosition != src){
+
+            }
+            else{
+
+            }
+
             newMove.emptyMove = false;
             world.crane.load = world.nowblock.get(index);
 
@@ -24,6 +33,7 @@ public class solver {
                 newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId);
                 newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
                 newMove.stepIndex = 1;
+                world.currentMove = newMove;
             }
             if(world.nowblock.get(index).position == 1){
                 newMove.indexId = index;
@@ -33,20 +43,99 @@ public class solver {
                 newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId);
                 newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
                 newMove.stepIndex = 1;
+                world.currentMove = newMove;
             }
             world.schedule.moves.add(newMove);
         }
-        else{
+        else{// Should consider time cost, default == 1
             // If reach the last step, shut it down
-            if(world.schedule.moves.get(world.schedule.moves.size() - 1).stepIndex == world.schedule.moves.get(world.schedule.moves.size() - 1).stepCost){
+            if(world.currentMove.stepIndex == world.currentMove.stepCost){
                 world.crane.isWorking = false;
             }
             // Else step into next step
             else{
-                world.schedule.moves.get(world.schedule.moves.size() - 1).stepIndex++;
+                world.currentMove.stepIndex++;
             }
         }
         return world.schedule;
+    }
+
+    //
+    public static int stepCost1(world world){
+        int cost = 0;
+        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 1){
+            if(world.currentMove.emptyMove == true){
+                cost = 1;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 5;
+            }
+        }
+        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 2){
+            if(world.currentMove.emptyMove == true){
+                cost = 2;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 6;
+            }
+        }
+        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 0){
+            if(world.currentMove.emptyMove == true){
+                cost = 1;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 5;
+            }
+        }
+        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 2){
+            if(world.currentMove.emptyMove == true){
+                cost = 1;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 5;
+            }
+        }
+        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 0){
+            if(world.currentMove.emptyMove == true){
+                cost = 2;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 6;
+            }
+        }
+        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 1){
+            if(world.currentMove.emptyMove == true){
+                cost = 1;
+            }
+            if(world.currentMove.emptyMove == false){
+                cost = 5;
+            }
+        }
+        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 0) {
+            if (world.currentMove.emptyMove == true) {
+                cost = 0;
+            }
+            if (world.currentMove.emptyMove == false) {
+                cost = 2;
+            }
+        }
+        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 1) {
+            if (world.currentMove.emptyMove == true) {
+                cost = 0;
+            }
+            if (world.currentMove.emptyMove == false) {
+                cost = 2;
+            }
+        }
+        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 2) {
+            if (world.currentMove.emptyMove == true) {
+                cost = 0;
+            }
+            if (world.currentMove.emptyMove == false) {
+                cost = 2;
+            }
+        }
+        return cost;
     }
 
     // Count the time cost of the move

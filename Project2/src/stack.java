@@ -2,7 +2,7 @@ import java.util.ArrayList;
 // Father class
 public class stack {
     ArrayList<block> stack = new ArrayList<>();
-    int capacity = 1;
+    int capacity = -1;
 }
 // Buffer stack
 class bufferStack {
@@ -22,7 +22,7 @@ class bufferStack {
 class arriveStack extends stack{
     int capacity = 5;
 }
-// Not used in HotStorage
+// Handover stack
 class handoverStack extends stack{
-
+    int capacity = 1;
 }

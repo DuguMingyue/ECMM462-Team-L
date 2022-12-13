@@ -9,6 +9,7 @@ public class world{
     double performance = 0; // Evaluation
     crane crane = new crane(); // In hot storage there is only 1 crane
     craneSchedule schedule = new craneSchedule();
+    craneMove currentMove = new craneMove();
 
     arriveStack aristk = new arriveStack();
     bufferStack bufstk = new bufferStack(bufferamount);
@@ -20,5 +21,19 @@ public class world{
     evaluation eva = new evaluation();
 
     property property = new property();
+
+    // Functions to change the variable state in the world
+    public static void state(world world){
+        if(world.schedule.moves.size() > 0){
+
+        }
+    }
+
+    //
+    public static boolean validMove(world world){
+        boolean rst = true;
+
+        return rst;
+    }
 
 }
