@@ -19,4 +19,6 @@ public class world{
     ArrayList<block> nowblock = new ArrayList<>(); //Block in the world now
     evaluation eva = new evaluation();
 
+    property property = new property();
+
 }

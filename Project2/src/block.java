@@ -3,6 +3,7 @@ import java.util.Random;
 
 public class block{
     int id = -1;// ID of the block
+    int position = 0;//0 represent arrive stack, 1 represent buffer stack, 2 represent handover stack
     int release = -1;// The time when block is released, count in seconds
     int due = -1;// The due time of the block, count in seconds
     boolean ready = false; // Is handed over or not or not

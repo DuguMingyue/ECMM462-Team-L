@@ -9,7 +9,6 @@ public class simulation {
 
         // Generate world
         world sim = new world();
-        property prop = new property();
         solver agent = new solver();
         System.out.println("Generate world success, start simulation");
 
@@ -18,11 +17,12 @@ public class simulation {
             sim.timestamp++;
 
             // If timestamp mod arrive intervals = 0 and the arrive stack is still empty to use, then release new block
-            if(sim.timestamp % prop.arriveInterval == 0){
-                // Still have space
-                if(sim.aristk.stack.size() < sim.aristk.capacity){
+            if(sim.timestamp % sim.property.arriveInterval == 0){
+                // Still have space and still have storage
+                if(sim.aristk.stack.size() < sim.aristk.capacity && sim.blockpool.size() > 0){
                     // Randomly choose a new block to release
                     int index = r.nextInt(sim.blockpool.size());
+                    sim.blockpool.get(index).release = sim.timestamp;
                     sim.aristk.stack.add(sim.blockpool.get(index));
                     sim.nowblock.add(sim.blockpool.get(index));
                     sim.blockpool.remove(index);
@@ -35,6 +35,13 @@ public class simulation {
 
             // Use solver to give the move
             sim.schedule = solver.solve(sim);
+            if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
+                sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
+                sim.nowblock.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
+            }
+
+            // Evaluations
+            System.out.println(sim.timestamp);
         }
     }
 }

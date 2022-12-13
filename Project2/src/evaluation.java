@@ -1,10 +1,10 @@
 public class evaluation {
     int BlockedArrivalTime = 0;
-
     int CraneManipulations = 0;
+    int DeliveredBlocks = 0;
+
     double ServiceLevelMean = 0;
     double LeadTimeMean = 0;
-    int DeliveredBlocks = 0;
     int TotalBlocksOnTime = 0;
 
     double TardinessMean = 0;
@@ -13,5 +13,9 @@ public class evaluation {
     double HandoverUtilizationMean = 0;
     double UpstreamUtilizationMean = 0;
 
+    public int[] stepChoice(world world){
+        int rst[] = new int[3];//rst0 is src, rst1 is dst, rst2 is empty or not
 
+        return rst;
+    }
 }

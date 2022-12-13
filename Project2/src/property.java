@@ -1,5 +1,5 @@
 public class property {
-    double arriveInterval = 1;
-    double craneMoveTime = 1;
-    double handoverReadyIntervals = 1;
+    int arriveInterval = 1;
+    int craneMoveTime = 1;
+    int handoverReadyIntervals = 1;
 }
