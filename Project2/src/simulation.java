@@ -10,19 +10,21 @@ public class simulation {
         // Generate world
         world sim = new world();
         property prop = new property();
+        solver agent = new solver();
         System.out.println("Generate world success, start simulation");
 
         // Run simulation
-        while(sim.blockpool.size() > 0){
+        while(sim.blockpool.size() > 0 || sim.nowblock.size() > 0){
             sim.timestamp++;
 
             // If timestamp mod arrive intervals = 0 and the arrive stack is still empty to use, then release new block
             if(sim.timestamp % prop.arriveInterval == 0){
-                // Still empty
+                // Still have space
                 if(sim.aristk.stack.size() < sim.aristk.capacity){
                     // Randomly choose a new block to release
                     int index = r.nextInt(sim.blockpool.size());
                     sim.aristk.stack.add(sim.blockpool.get(index));
+                    sim.nowblock.add(sim.blockpool.get(index));
                     sim.blockpool.remove(index);
                 }
                 // Already full
@@ -31,8 +33,8 @@ public class simulation {
                 }
             }
 
-            // Move of the crane
-
+            // Use solver to give the move
+            sim.schedule = solver.solve(sim);
         }
     }
 }

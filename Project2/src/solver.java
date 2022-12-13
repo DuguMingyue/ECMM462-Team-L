@@ -1,6 +1,13 @@
+import java.util.Random;
+
 public class solver {
-    craneMove move = new craneMove();
-    craneSchedule schedule = new craneSchedule();
+    public static craneSchedule solve(world world){
+        //Decide the block
+        Random r = new Random();
+        int index = r.nextInt(world.nowblock.size());
 
 
+
+        return world.schedule;
+    }
 }
