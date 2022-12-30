@@ -8,6 +8,7 @@ public class stack {
 class bufferStack {
     int bufferamount = 3;
     int capacity = 7;
+    int totalCapacity = capacity * bufferamount;
     ArrayList<ArrayList<block>> stack = new ArrayList<>();
 
     public bufferStack(int bufferamount){
