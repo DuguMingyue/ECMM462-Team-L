@@ -3,7 +3,7 @@
 ### Team member：Chenyang Fan, Ruilong Liu, Tweedie Adam, Srinivas Karan, Suresh Yedukrishnan
 
 ## First, we created a model of the container environment.
-### simulation.java: Generate a simulation environment.
+simulation.java: Generate a simulation environment.
 ### world.java: Generate a word that includes the timestamp, amount of blocks, amount of buffer stacks, a crane and Functions to change the variable state in the world.
 ### stack.java: Define arrive stack, buffer stacks and handover stacks. Here we defined that buffer stacks have three stacks and their capacity is seven, the capacity of the arrive stack is five.
 ### block.java: Defined the id of the block, the arrival time of the block, initial position and due time. Then randomly generate the blocks.
