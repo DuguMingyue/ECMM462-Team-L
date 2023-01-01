@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class evaluation {
     double BlockedArrivalTime = 0;
     double CraneManipulations = 0;
@@ -14,8 +16,18 @@ public class evaluation {
     double UpstreamUtilizationMean = 0;
 
     public int[] stepChoice(world world){
-        int rst[] = new int[3];//rst0 is src, rst1 is dst, rst2 is the block to be carried
+        ArrayList<int[]> population = ea.initialize(world);
+        ArrayList<Integer> fitnessScores = ea.fitness(world, population);
 
-        return rst;
+        int evaluations = 0;
+        while (evaluations < 1000) {
+
+            ArrayList<int[]> parents = ea.tournament(fitnessScores, population);
+            
+
+
+            evaluations++;
+        }
+
     }
 }
