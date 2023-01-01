@@ -13,39 +13,55 @@ public class solver {
             int src = 0;//source id
             int tgt = 0;//target id
 
-            craneMove newMove = new craneMove(world.crane);
+            craneMove preMove = new craneMove(world.crane);//An empty move which might exist before the new move
+            craneMove newMove = new craneMove(world.crane);//New move
 
+            // If the crane is not at the position src, then execute a empty move first to that position
             if(world.crane.horizonPosition != src){
-
+                preMove.emptyMove = true;
+                preMove.sourceId = world.crane.horizonPosition;
+                preMove.targetId = src;
+                preMove.stepCost = stepCost(preMove.sourceId, preMove.targetId, true);
+                preMove.timeCost = preMove.stepCost * world.property.craneMoveTime;
+                preMove.stepIndex = 1;
+                world.schedule.moves.add(preMove);
             }
-            else{
-
-            }
-
             newMove.emptyMove = false;
-            world.crane.load = world.nowblock.get(index);
-
-            if(world.nowblock.get(index).position == 0){// Possibilities that 0 move to 2
-                newMove.indexId = index;
-                newMove.blockId = world.nowblock.get(index).id;
-                newMove.sourceId = 0;
-                newMove.targetId = 1;
-                newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId);
-                newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
-                newMove.stepIndex = 1;
-                world.currentMove = newMove;
-            }
-            if(world.nowblock.get(index).position == 1){
-                newMove.indexId = index;
-                newMove.blockId = world.nowblock.get(index).id;
-                newMove.sourceId = 1;
-                newMove.targetId = 2;
-                newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId);
-                newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
-                newMove.stepIndex = 1;
-                world.currentMove = newMove;
-            }
+            newMove.indexId = index;
+            newMove.blockId = world.nowblock.get(index).id;
+            newMove.sourceId = src;
+            newMove.targetId = tgt;
+            newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId, false);
+            newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
+            newMove.stepIndex = 1;
             world.schedule.moves.add(newMove);
+
+            //For validation checking
+            world.currentMove = newMove;
+
+//            newMove.emptyMove = false;
+//            world.crane.load = world.nowblock.get(index);
+//            if(world.nowblock.get(index).position == 0){// Possibilities that 0 move to 2
+//                newMove.indexId = index;
+//                newMove.blockId = world.nowblock.get(index).id;
+//                newMove.sourceId = 0;
+//                newMove.targetId = 1;
+//                newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId, false);
+//                newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
+//                newMove.stepIndex = 1;
+//                world.currentMove = newMove;
+//            }
+//            if(world.nowblock.get(index).position == 1){
+//                newMove.indexId = index;
+//                newMove.blockId = world.nowblock.get(index).id;
+//                newMove.sourceId = 1;
+//                newMove.targetId = 2;
+//                newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId, false);
+//                newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
+//                newMove.stepIndex = 1;
+//                world.currentMove = newMove;
+//            }
+//            world.schedule.moves.add(newMove);
         }
         else{// Should consider time cost, default == 1
             // If reach the last step, shut it down
@@ -60,78 +76,78 @@ public class solver {
         return world.schedule;
     }
 
-    //
-    public static int stepCost1(world world){
+    // Count the step cost of the move
+    public static int stepCost(int sourceId, int targetId, boolean emptyMove){
         int cost = 0;
-        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 1){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 0 && targetId == 1){
+            if(emptyMove == true){
                 cost = 1;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 5;
             }
         }
-        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 2){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 0 && targetId == 2){
+            if(emptyMove == true){
                 cost = 2;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 6;
             }
         }
-        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 0){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 1 && targetId == 0){
+            if(emptyMove == true){
                 cost = 1;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 5;
             }
         }
-        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 2){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 1 && targetId == 2){
+            if(emptyMove == true){
                 cost = 1;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 5;
             }
         }
-        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 0){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 2 && targetId == 0){
+            if(emptyMove == true){
                 cost = 2;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 6;
             }
         }
-        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 1){
-            if(world.currentMove.emptyMove == true){
+        if(sourceId == 2 && targetId == 1){
+            if(emptyMove == true){
                 cost = 1;
             }
-            if(world.currentMove.emptyMove == false){
+            if(emptyMove == false){
                 cost = 5;
             }
         }
-        if(world.currentMove.sourceId == 0 && world.currentMove.targetId == 0) {
-            if (world.currentMove.emptyMove == true) {
+        if(sourceId == 0 && targetId == 0) {
+            if (emptyMove == true) {
                 cost = 0;
             }
-            if (world.currentMove.emptyMove == false) {
+            if (emptyMove == false) {
                 cost = 2;
             }
         }
-        if(world.currentMove.sourceId == 1 && world.currentMove.targetId == 1) {
-            if (world.currentMove.emptyMove == true) {
+        if(sourceId == 1 && targetId == 1) {
+            if (emptyMove == true) {
                 cost = 0;
             }
-            if (world.currentMove.emptyMove == false) {
+            if (emptyMove == false) {
                 cost = 2;
             }
         }
-        if(world.currentMove.sourceId == 2 && world.currentMove.targetId == 2) {
-            if (world.currentMove.emptyMove == true) {
+        if(sourceId == 2 && targetId == 2) {
+            if (emptyMove == true) {
                 cost = 0;
             }
-            if (world.currentMove.emptyMove == false) {
+            if (emptyMove == false) {
                 cost = 2;
             }
         }
@@ -139,7 +155,7 @@ public class solver {
     }
 
     // Count the time cost of the move
-    public static int stepCost(int srcId, int tgtId){
+    public static int stepCost1(int srcId, int tgtId){
         int step = 0;
         if(srcId == 0 && tgtId == 1){
             step = 5;

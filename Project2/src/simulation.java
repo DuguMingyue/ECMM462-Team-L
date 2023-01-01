@@ -11,6 +11,7 @@ public class simulation {
         solver agent = new solver();
         System.out.println("Generate world success, start simulation");
 
+
         // Run simulation
         while(sim.hndstk.stack.size() != sim.blockamount){
             sim.timestamp++;
@@ -32,8 +33,13 @@ public class simulation {
                 }
             }
 
+
+
+
             // Use solver to give the move
             sim.schedule = solver.solve(sim);
+
+
             if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
                 sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
                 sim.hndstk.stack.add(sim.nowblock.get(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId));
@@ -41,6 +47,8 @@ public class simulation {
 
             }
             System.out.println(sim.timestamp);
+
+            world.state(sim);
 
         }
 

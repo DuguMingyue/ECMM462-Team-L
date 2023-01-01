@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class stack {
     ArrayList<block> stack = new ArrayList<>();
     int capacity = -1;
+
 }
 // Buffer stack
 class bufferStack {
