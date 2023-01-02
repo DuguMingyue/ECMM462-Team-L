@@ -4,7 +4,7 @@ import java.util.Random;
 public class block{
     int id = -1;// ID of the block
     int arrivalTime = -1; // time at which the block arrives at arrival stack after the previous
-    int position = 0;//0 represent arrive stack, 1 represent buffer stack, 2 represent handover stack
+    int position = 0;//0 represent arrive stack, 1 represent handover stack, >= 2 represent buffer stack
     int release = -1;// The time when block is released, count in seconds
     int due = -1;// The due time of the block, count in seconds
     int readyTime = -1;

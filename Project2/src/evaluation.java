@@ -15,19 +15,25 @@ public class evaluation {
     double HandoverUtilizationMean = 0;
     double UpstreamUtilizationMean = 0;
 
-    public int[] stepChoice(world world){
+    public static int[] stepChoice(world world){
         ArrayList<int[]> population = ea.initialize(world);
         ArrayList<Integer> fitnessScores = ea.fitness(world, population);
 
         int evaluations = 0;
         while (evaluations < 1000) {
-
-            ArrayList<int[]> parents = ea.tournament(fitnessScores, population);
-            
-
-
+            //Tournament
+            ArrayList<int[]> parent = ea.tournament(fitnessScores, population);
+            //ArrayList<int[]> parentB = ea.tournament(fitnessScores, population);
+            //Mutation
+            ea.mutation(parent);
+            //Crossover
+            ea.corssover(parent.get(0), parent.get(1));
+            //WeakestReplacement
+            ea.weakestReplace(population, parent, fitnessScores);
             evaluations++;
         }
 
+        //Return which choice in the world?
+        return population.get(0);
     }
 }

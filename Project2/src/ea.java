@@ -4,6 +4,7 @@ import java.util.Random;
 public class ea {
 
     //Evaluation of single individual
+    //Not used
     public static int evaluation(int[] individual){
         int eva = 0;
         //Need to be done
@@ -140,7 +141,8 @@ public class ea {
                 score+=2;
             }
 
-            fit.set(i, score);
+            fit.add(score);
+            //fit.set(i, score);
             i++;
         }
         return fit;
@@ -187,8 +189,8 @@ public class ea {
         while(temp < children.size()){
             double rule = r.nextDouble();
             if(rule < mutationRate){
-                // Change the destination, 0 arrive, 1,2,3 buffer, 4 handover
-                children.get(temp)[1] = r.nextInt(5);
+                // Change the destination, 0 arrive, 2,3,4 buffer, 1 handover
+                children.get(temp)[1] = r.nextInt(3) + 2;
             }
             temp++;
         }
@@ -202,7 +204,7 @@ public class ea {
         //Switch the destination
         if(rule < crossRate){
             int temp = 0;
-            temp = ind1[2];
+            temp = ind1[1];
             ind1[1] = ind2[1];
             ind2[1] = temp;
         }
@@ -210,21 +212,21 @@ public class ea {
 
     // Replace the weakest one between children and population each roll
     // Input: population and children generated
-    public static void weakestReplace(ArrayList<int[]> population, ArrayList<int[]> children){
+    public static void weakestReplace(ArrayList<int[]> population, ArrayList<int[]> children, ArrayList<Integer> fit){
         int temp0 = 0;
         while(temp0 < children.size()){
             int weakestIndex = 0;
-            double weakestEva = evaluation(population.get(0));
+            double weakestEva = fit.get(0);
             int temp1 = 0;
             while(temp1 < population.size() - 1){
-                if(evaluation(population.get(temp1)) > evaluation(population.get(temp1 + 1))){
+                if(fit.get(temp1) > fit.get(temp1 + 1)){
                     weakestIndex = temp1 + 1;
-                    weakestEva = evaluation(population.get(temp1 + 1));
+                    weakestEva = fit.get(temp1 + 1);
                 }
                 temp1++;
             }
             // If children is better than the weakest one in the population, then replace
-            if(evaluation(children.get(temp0)) > weakestEva){
+            if(fit.get(temp0) > weakestEva){
                 population.set(weakestIndex, children.get(temp0));
             }
             temp0++;

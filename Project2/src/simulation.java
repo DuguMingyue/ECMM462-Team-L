@@ -13,7 +13,7 @@ public class simulation {
 
 
         // Run simulation
-        while(sim.hndstk.stack.size() != sim.blockamount){
+        while(sim.overblock.size() != sim.blockamount){
             sim.timestamp++;
 
             // If timestamp mod arrive intervals = 0 and the arrive stack is still empty to use, then release new block
@@ -22,7 +22,7 @@ public class simulation {
                 if(sim.aristk.stack.size() < sim.aristk.capacity && sim.blockpool.size() > 0){
                     // Randomly choose a new block to release
                     int index = r.nextInt(sim.blockpool.size());
-                    //sim.blockpool.get(index).release = sim.timestamp;
+                    sim.blockpool.get(index).release = sim.timestamp;
                     sim.aristk.stack.add(sim.blockpool.get(index));
                     sim.nowblock.add(sim.blockpool.get(index));
                     sim.blockpool.remove(index);
@@ -33,27 +33,21 @@ public class simulation {
                 }
             }
 
-
-
-
             // Use solver to give the move
             sim.schedule = solver.solve(sim);
+            world.update(sim);
 
-
-            if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
-                sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
-                sim.hndstk.stack.add(sim.nowblock.get(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId));
-                sim.nowblock.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
-
-            }
+//            if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
+//                sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
+//                sim.hndstk.stack.add(sim.nowblock.get(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId));
+//                sim.nowblock.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
+//
+//            }
             System.out.println(sim.timestamp);
-
-            world.state(sim);
-
         }
 
         // Evaluations
-        System.out.println(sim.timestamp);
+        //System.out.println(sim.timestamp);
     }
 }
 

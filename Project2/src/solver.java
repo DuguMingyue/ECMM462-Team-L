@@ -5,13 +5,29 @@ public class solver {
         //Decide the block
         Random r = new Random();
         //If the crane is not working, then generate new steps and work
-        if(world.currentMove.executed == true){
+        if(world.crane.isWorking == false){
             world.crane.isWorking = true;
 
             // Return value should be on the top of the stack and emptyMove is true or not
-            int index = r.nextInt(world.nowblock.size());//The block
-            int src = 0;//source id
-            int tgt = 0;//target id
+            //int index = r.nextInt(world.nowblock.size());//The block
+            //int src = 0;//source id
+            //int tgt = 0;//target id
+
+            int[] solution = evaluation.stepChoice(world);//source id
+            int src = solution[0]; //source id
+            int tgt = solution[1];//target id
+            int Id = solution[2];
+            //Find the index
+            int index = 0;
+            int temp = 0;
+            if(world.nowblock.size() > 0){
+                while(temp < world.nowblock.size()){
+                    if(world.nowblock.get(temp).id == Id){
+                        index = temp;
+                    }
+                    temp++;
+                }
+            }
 
             craneMove preMove = new craneMove(world.crane);//An empty move which might exist before the new move
             craneMove newMove = new craneMove(world.crane);//New move
@@ -28,16 +44,15 @@ public class solver {
             }
             newMove.emptyMove = false;
             newMove.indexId = index;
-            newMove.blockId = world.nowblock.get(index).id;
+            //BlockId is the index in the array nowblock
+            newMove.blockId = Id;
             newMove.sourceId = src;
             newMove.targetId = tgt;
             newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId, false);
             newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
             newMove.stepIndex = 1;
             world.schedule.moves.add(newMove);
-
-            //For validation checking
-            world.currentMove = newMove;
+            world.currentMove = world.schedule.moves.get(0);
 
 //            newMove.emptyMove = false;
 //            world.crane.load = world.nowblock.get(index);
@@ -63,9 +78,13 @@ public class solver {
 //            }
 //            world.schedule.moves.add(newMove);
         }
+
         else{// Should consider time cost, default == 1
             // If reach the last step, shut it down
-            if(world.currentMove.stepIndex == world.currentMove.stepCost){
+            //For validation checking
+            world.currentMove = world.schedule.moves.get(0);
+            if(world.currentMove.stepIndex >= world.currentMove.stepCost){
+                world.schedule.moves.remove(0);
                 world.crane.isWorking = false;
             }
             // Else step into next step
@@ -77,9 +96,10 @@ public class solver {
     }
 
     // Count the step cost of the move
+    // Move between the buffer is not counted the horizontal time
     public static int stepCost(int sourceId, int targetId, boolean emptyMove){
         int cost = 0;
-        if(sourceId == 0 && targetId == 1){
+        if(sourceId == 0 && targetId >= 2){
             if(emptyMove == true){
                 cost = 1;
             }
@@ -87,39 +107,39 @@ public class solver {
                 cost = 5;
             }
         }
-        if(sourceId == 0 && targetId == 2){
+        if(sourceId == 0 && targetId == 1){
             if(emptyMove == true){
                 cost = 2;
             }
             if(emptyMove == false){
                 cost = 6;
+            }
+        }
+        if(sourceId >= 2 && targetId == 0){
+            if(emptyMove == true){
+                cost = 1;
+            }
+            if(emptyMove == false){
+                cost = 5;
+            }
+        }
+        if(sourceId >= 2 && targetId == 1){
+            if(emptyMove == true){
+                cost = 1;
+            }
+            if(emptyMove == false){
+                cost = 5;
             }
         }
         if(sourceId == 1 && targetId == 0){
             if(emptyMove == true){
-                cost = 1;
-            }
-            if(emptyMove == false){
-                cost = 5;
-            }
-        }
-        if(sourceId == 1 && targetId == 2){
-            if(emptyMove == true){
-                cost = 1;
-            }
-            if(emptyMove == false){
-                cost = 5;
-            }
-        }
-        if(sourceId == 2 && targetId == 0){
-            if(emptyMove == true){
                 cost = 2;
             }
             if(emptyMove == false){
                 cost = 6;
             }
         }
-        if(sourceId == 2 && targetId == 1){
+        if(sourceId == 1 && targetId >= 2){
             if(emptyMove == true){
                 cost = 1;
             }
@@ -143,12 +163,12 @@ public class solver {
                 cost = 2;
             }
         }
-        if(sourceId == 2 && targetId == 2) {
+        if(sourceId >= 2 && targetId >= 2) {
             if (emptyMove == true) {
-                cost = 0;
+                cost = 1;
             }
             if (emptyMove == false) {
-                cost = 2;
+                cost = 5;
             }
         }
         return cost;

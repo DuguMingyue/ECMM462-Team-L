@@ -20,10 +20,12 @@ class bufferStack {
         }
     }
 }
+
 // Arriving stack
 class arriveStack extends stack{
     int capacity = 5;
 }
+
 // Handover stack
 class handoverStack extends stack{
     int capacity = 1;
