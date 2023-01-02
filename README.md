@@ -14,7 +14,7 @@
 ## Second, apply evolutionary algorithms to solve the current model
 #### RandomNumberGenerator.java: Randomly generate arrival time, due time and ready time of each block.
 
-#### evaluation.java:
+#### evaluation.java: public class with static method stepChoice() which takes world as parameter and returns a crane move
 
 ### To run the project
 - Download ZIP
