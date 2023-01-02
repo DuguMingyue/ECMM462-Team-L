@@ -13,4 +13,10 @@
 
 ## Second, apply evolutionary algorithms to solve the current model
 #### RandomNumberGenerator.java: Randomly generate arrival time, due time and ready time of each block.
-#### evaluation.java:
+#### ea.java: Specific evolutionary processes, including: crossover, mutation and tournament selection
+#### evaluation.java: Evaluation of the fitness
+
+
+## Reproduce the outputs
+
+
