@@ -20,4 +20,5 @@
 - Download ZIP
 - Ensure you have JDK installed
 - Open in IDE of your choice or navigate to the directory where simulation.java file is stored
-- Compile by typing `javac simulation.java`
+- Run in IDE or compile by typing `javac simulation.java`
+- Run the program by typing `java simulation`
