@@ -18,7 +18,8 @@
 
 ### To run the project
 - Download ZIP
-- Ensure you have JDK installed
-- Open in IDE of your choice or navigate to the directory where simulation.java file is stored
+- Ensure you have JDK15 installed
+- Open in IntelliJ IDE of your choice or navigate to the directory where simulation.java file is stored
 - Run in IDE or compile by typing `javac simulation.java`
 - Run the program by typing `java simulation`
+- Prameters is in ea.java and world.java
