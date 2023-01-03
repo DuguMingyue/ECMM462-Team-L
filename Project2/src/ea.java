@@ -22,6 +22,7 @@ public class ea {
             while (t < world.nowblock.size()*10) {
                 Random random = new Random();
                 int index = (int)(Math.random() * world.nowblock.size());
+                //int index = random.nextInt(world.nowblock.size());
                 int blockId = world.nowblock.get(index).id;
                 int source = world.nowblock.get(index).position;
                 int destination = random.nextInt(5); // stacks are 0,1,2,3,4
@@ -183,7 +184,7 @@ public class ea {
 
     //Mutation functions
     public static void mutation(ArrayList<int[]> children){
-        double mutationRate = 0.1;
+        double mutationRate = 0.01;
         Random r = new Random();
         int temp = 0;
         while(temp < children.size()){
@@ -198,7 +199,7 @@ public class ea {
 
     //Cross over functions
     public static void corssover(int[] ind1, int[] ind2){
-        double crossRate = 0.1;
+        double crossRate = 0.01;
         Random r = new Random();
         double rule = r.nextDouble();
         //Switch the destination

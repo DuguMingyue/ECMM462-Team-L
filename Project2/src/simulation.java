@@ -1,21 +1,23 @@
-import java.util.Scanner;
 import java.util.Random;
+
 // Parameters adjustment is in world.java and property.java
+
 public class simulation {
     public static void main(String args[]){
-        Scanner in = new Scanner(System.in);
         Random r = new Random();
 
         // Generate world
         world sim = new world();
+        // Generate agent
         solver agent = new solver();
-        System.out.println("Generate world success, start simulation");
 
+        System.out.println("Generate world success, start simulation");
 
         // Run simulation
         while(sim.overblock.size() != sim.blockamount){
             sim.timestamp++;
 
+            // Release the block
             // If timestamp mod arrive intervals = 0 and the arrive stack is still empty to use, then release new block
             if(sim.timestamp % sim.property.arriveInterval == 0){
                 // Still have space and still have storage
@@ -35,19 +37,27 @@ public class simulation {
 
             // Use solver to give the move
             sim.schedule = solver.solve(sim);
+
+            // Update all the state in the world
             world.update(sim);
 
-//            if(sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 5 || sim.schedule.moves.get(sim.schedule.moves.size() - 1).stepIndex == 6){
-//                sim.aristk.stack.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
-//                sim.hndstk.stack.add(sim.nowblock.get(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId));
-//                sim.nowblock.remove(sim.schedule.moves.get(sim.schedule.moves.size() - 1).indexId);
-//
-//            }
             System.out.println(sim.timestamp);
         }
 
+        System.out.println("Simulation end, Evaluation starts");
         // Evaluations
-        //System.out.println(sim.timestamp);
+        System.out.println(sim.eva.CraneManipulations);
+        System.out.println(sim.eva.BlockedArrivalTime);
+        int temp = 0;
+        while(temp < sim.overblock.size()){
+            if(sim.overblock.get(temp).overdue == true){
+                sim.eva.DeliveredBlocks++;
+            }
+            temp++;
+        }
+        System.out.println(sim.eva.DeliveredBlocks);
+        //System.out.println(sim.overblock);
+
     }
 }
 

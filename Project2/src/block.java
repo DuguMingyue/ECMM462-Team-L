@@ -7,7 +7,8 @@ public class block{
     int position = 0;//0 represent arrive stack, 1 represent handover stack, >= 2 represent buffer stack
     int release = -1;// The time when block is released, count in seconds
     int due = -1;// The due time of the block, count in seconds
-    int readyTime = -1;
+    int readyTime = -1;// When the block is ready
+    int handovertime = -1;
     boolean ready = false; // Is handed over or not or not
     boolean overdue = false; // Is overdue or not
 
@@ -50,14 +51,15 @@ public class block{
         return result;
     }
 
-    public static void main(String[] args) {
-        ArrayList<block> blocks = GenerateRandomBlocks(100);
-        System.out.println("id, position, release, arrivalTime, dueTime, readyTime, ready, overdue");
-        for (block b : blocks) {
-            System.out.println(b.id+","+b.position+","+b.release+","+b.arrivalTime+","+b.due+","+b.readyTime+","+b.ready+","+b.overdue);
-        }
-    }
+//    public static void main(String[] args) {
+//        ArrayList<block> blocks = GenerateRandomBlocks(100);
+//        System.out.println("id, position, release, arrivalTime, dueTime, readyTime, ready, overdue");
+//        for (block b : blocks) {
+//            System.out.println(b.id+","+b.position+","+b.release+","+b.arrivalTime+","+b.due+","+b.readyTime+","+b.ready+","+b.overdue);
+//        }
+//    }
 
+    // handOver function, to identify where the block is ready or not, not used
     public static void handOver(block Block){
         Block.ready = true;
     }

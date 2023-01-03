@@ -8,11 +8,7 @@ public class solver {
         if(world.crane.isWorking == false){
             world.crane.isWorking = true;
 
-            // Return value should be on the top of the stack and emptyMove is true or not
-            //int index = r.nextInt(world.nowblock.size());//The block
-            //int src = 0;//source id
-            //int tgt = 0;//target id
-
+            // Return value should be on the top of the stack
             int[] solution = evaluation.stepChoice(world);//source id
             int src = solution[0]; //source id
             int tgt = solution[1];//target id
@@ -41,6 +37,7 @@ public class solver {
                 preMove.timeCost = preMove.stepCost * world.property.craneMoveTime;
                 preMove.stepIndex = 1;
                 world.schedule.moves.add(preMove);
+                world.eva.CraneManipulations++;
             }
             newMove.emptyMove = false;
             newMove.indexId = index;
@@ -51,6 +48,8 @@ public class solver {
             newMove.stepCost = stepCost(newMove.sourceId, newMove.targetId, false);
             newMove.timeCost = newMove.stepCost * world.property.craneMoveTime;
             newMove.stepIndex = 1;
+
+            world.eva.CraneManipulations++;
             world.schedule.moves.add(newMove);
             world.currentMove = world.schedule.moves.get(0);
 
@@ -83,14 +82,18 @@ public class solver {
             // If reach the last step, shut it down
             //For validation checking
             world.currentMove = world.schedule.moves.get(0);
-            if(world.currentMove.stepIndex >= world.currentMove.stepCost){
+            //step into next step
+            if(world.currentMove.stepIndex < world.currentMove.stepCost){
+                world.currentMove.stepIndex++;
+            }
+            if(world.currentMove.stepIndex >= world.currentMove.stepCost && world.schedule.moves.size() == 1){
                 world.schedule.moves.remove(0);
                 world.crane.isWorking = false;
             }
-            // Else step into next step
-            else{
-                world.currentMove.stepIndex++;
+            if(world.currentMove.stepIndex >= world.currentMove.stepCost && world.schedule.moves.size() > 1){
+                world.schedule.moves.remove(0);
             }
+
         }
         return world.schedule;
     }
@@ -175,7 +178,7 @@ public class solver {
     }
 
     // Count the time cost of the move
-    public static int stepCost1(int srcId, int tgtId){
+    public static int stepCosttest(int srcId, int tgtId){
         int step = 0;
         if(srcId == 0 && tgtId == 1){
             step = 5;

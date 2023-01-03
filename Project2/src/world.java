@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.stream.IntStream;
 
 public class world{
@@ -22,8 +20,8 @@ public class world{
     ArrayList<block> blockpool = block.GenerateRandomBlocks(blockamount); //Initial block pool to be moved
     ArrayList<block> nowblock = new ArrayList<>(); //Block in the world now
     ArrayList<block> overblock = new ArrayList<>(); //Block already hand over
-    evaluation eva = new evaluation();
 
+    evaluation eva = new evaluation();
     property property = new property();
 
     // Functions to change the variable state in the world
@@ -37,6 +35,18 @@ public class world{
                 }
             }
             // Examine where the block is overdue/ready or not
+            int temp = 0;
+            while(temp < world.nowblock.size()){
+                if(world.timestamp > world.nowblock.get(temp).due){
+                    world.nowblock.get(temp).overdue = true;
+                }
+                if(world.timestamp > world.nowblock.get(temp).readyTime){
+                    world.nowblock.get(temp).ready = true;
+                }
+                temp++;
+            }
+
+            // Adjusting the state of crane, stack and block
             if(curMove.sourceId == 0 && curMove.targetId == 1){
                 if(curMove.emptyMove == true){
                     if(curMove.stepIndex == 1){
@@ -53,6 +63,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 2){
                         world.crane.verticalPosition = 1;
+                        world.aristk.stack.remove(0);
                     }
                     if(curMove.stepIndex == 3){
                         world.crane.horizonPosition = 2;
@@ -87,6 +98,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 2){
                         world.crane.verticalPosition = 1;
+                        world.aristk.stack.remove(0);
                     }
                     if(curMove.stepIndex == 3){
                         world.nowblock.get(curMove.indexId).position = curMove.targetId;
@@ -94,6 +106,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 4) {
                         world.crane.verticalPosition = 0;
+                        world.bufstk.stack.get(curMove.targetId - 2).add(world.nowblock.get(curMove.indexId));
                     }
                     if(curMove.stepIndex == 5){
                         world.crane.verticalPosition = 1;
@@ -158,6 +171,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 2){
                         world.crane.verticalPosition = 1;
+                        world.bufstk.stack.get(curMove.sourceId - 2).remove(world.bufstk.stack.get(curMove.sourceId - 2).size() - 1);
                     }
                     if(curMove.stepIndex == 3){
                         world.crane.horizonPosition = 1;
@@ -186,6 +200,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 2){
                         world.crane.verticalPosition = 1;
+                        world.bufstk.stack.get(curMove.sourceId - 2).remove(world.bufstk.stack.get(curMove.sourceId - 2).size() - 1);
                     }
                     if(curMove.stepIndex == 3){
                         world.nowblock.get(curMove.indexId).position = curMove.targetId;
@@ -193,6 +208,7 @@ public class world{
                     }
                     if(curMove.stepIndex == 4) {
                         world.crane.verticalPosition = 0;
+                        world.bufstk.stack.get(curMove.targetId - 2).add(world.nowblock.get(curMove.indexId));
                     }
                     if(curMove.stepIndex == 5){
                         world.crane.verticalPosition = 1;
@@ -213,39 +229,113 @@ public class world{
                 return false; // block is not ready
             }
         }
-        if (currentMove.sourceId == 1) {
+
+        if (currentMove.sourceId == 2 && world.bufstk.stack.get(0).size() <= 0
+                || currentMove.sourceId == 3 && world.bufstk.stack.get(1).size() <= 0
+                || currentMove.sourceId == 4 && world.bufstk.stack.get(2).size() <= 0) {
+            return false;
+        }
+        if (currentMove.sourceId == 2 || currentMove.sourceId == 3 || currentMove.sourceId == 4) {
             int[] ids = new int[world.bufstk.bufferamount];
             block[] blocksOnTop = new block[world.bufstk.bufferamount];
             for (ArrayList<block> stack : world.bufstk.stack) {
-                ids[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1).id;
-                blocksOnTop[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1);
+                if (stack.size() != 0) {
+                    ids[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1).id;
+                    blocksOnTop[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1);
+                } else {
+                    ids[world.bufstk.stack.indexOf(stack)] = -1;
+                    blocksOnTop[world.bufstk.stack.indexOf(stack)] = null;
+                }
             }
             if (IntStream.of(ids).noneMatch(x -> x == currentMove.blockId)) { // if block not top in any buffer
                 return false; // block not found
             }
-
             for (block ontopblock : blocksOnTop) {
-                if (currentMove.targetId == 2 && ontopblock.id == currentMove.blockId && !ontopblock.ready) {
-                    return false; // block is not ready
+                if (ontopblock!=null) {
+                    if (currentMove.targetId == 1 && ontopblock.id == currentMove.blockId && !ontopblock.ready) {
+                        return false; // block is not ready
+                    }
                 }
             }
         }
-        if (currentMove.sourceId == 2) {
+        if (currentMove.sourceId == 1) {
             return false; // invalid source
         }
         if (currentMove.targetId == 0) {
             return false; // invalid target
         }
-        if (currentMove.targetId == 1) {
-            int stacksTotalCapacity = 0;
-            for ( ArrayList<block> stack : world.bufstk.stack) {
-                stacksTotalCapacity += stack.size();
-            }
-            if (stacksTotalCapacity >= world.bufstk.totalCapacity) {
-                return false; // height violation
+        if (currentMove.targetId == 2 || currentMove.targetId == 3 || currentMove.targetId == 4) {
+            switch (currentMove.targetId) {
+                // check for height violation in buffers
+                case 2:
+                    if (world.bufstk.stack.get(0).size() >= 7) {
+                        return false;
+                    }
+                    break;
+                case 3:
+                    if (world.bufstk.stack.get(1).size() >= 7) {
+                        return false;
+                    }
+                    break;
+                case 4:
+                    if (world.bufstk.stack.get(2).size() >= 7) {
+                        return false;
+                    }
+                    break;
             }
         }
-
+        if (currentMove.targetId == currentMove.sourceId) {
+            return false; // pointless move
+        }
         return true; // otherwise return true
     }
+
+
+
+//    public static boolean validMove1(world world){
+//        // 0=arrival, 1=handover, {2,3,4}=buffer
+//        craneMove currentMove = world.currentMove;
+//        if (currentMove.sourceId == 0) {
+//            if (currentMove.blockId != world.aristk.stack.get(0).id && !currentMove.emptyMove) {
+//                return false; // block not found
+//            }
+//            if (currentMove.targetId == 1 && currentMove.blockId == world.aristk.stack.get(0).id && !world.aristk.stack.get(0).ready) {
+//                return false; // block is not ready
+//            }
+//        }
+//        if (currentMove.sourceId == 2 || currentMove.sourceId == 3 || currentMove.sourceId == 4) {
+//            int[] ids = new int[world.bufstk.bufferamount];
+//            block[] blocksOnTop = new block[world.bufstk.bufferamount];
+//            for (ArrayList<block> stack : world.bufstk.stack) {
+//                ids[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1).id;
+//                blocksOnTop[world.bufstk.stack.indexOf(stack)] = stack.get(stack.size()-1);
+//            }
+//            if (IntStream.of(ids).noneMatch(x -> x == currentMove.blockId)) { // if block not top in any buffer
+//                return false; // block not found
+//            }
+//
+//            for (block ontopblock : blocksOnTop) {
+//                if (currentMove.targetId == 1 && ontopblock.id == currentMove.blockId && !ontopblock.ready) {
+//                    return false; // block is not ready
+//                }
+//            }
+//        }
+//        if (currentMove.sourceId == 1) {
+//            return false; // invalid source
+//        }
+//        if (currentMove.targetId == 0) {
+//            return false; // invalid target
+//        }
+//        if (currentMove.targetId == 2 || currentMove.targetId == 3 || currentMove.targetId == 4) {
+//            int stacksTotalCapacity = 0;
+//            for ( ArrayList<block> stack : world.bufstk.stack) {
+//                stacksTotalCapacity += stack.size();
+//            }
+//            if (stacksTotalCapacity >= world.bufstk.totalCapacity) {
+//                return false; // height violation
+//            }
+//        }
+//
+//        return true; // otherwise return true
+//    }
 }
